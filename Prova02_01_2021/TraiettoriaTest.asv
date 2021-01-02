@@ -82,22 +82,18 @@ set5(i,:) = s5;
 set6(i,:) = s6;
 set7(i,:) = s7;
 set8(i,:) = s8;
-waitbar(i/length(p_s),h)
+waitbar(i/length(x),h)
 end
 
 %% Plot traiettoria complessiva 
 result = [pos;set2]; % joint variable
 for i = 1:length(result)
-tmp = double(IRB140.fkine(result(i,:)));
-ee(:,i) = tmp(1:3,end);
-end
-p_s = [p_s ee];
 %%
 close all
 figure(2)
 hold on,grid on
 view(3)
-plot3(p_s(1,:),p_s(2,:),p_s(3,:),'r*');
+plot3(p_s(1,:),p_s(2,:),p_s(3,:),'r');
 xlim([-1 1]);ylim([-1 1]);zlim([0 1.5]);
 for i = 1:10:length(result)
 IRB140.plot(result(i,:));
