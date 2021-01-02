@@ -30,19 +30,30 @@ if(clientID > -1)
     [~] = vrep.simxSynchronous(clientID,true);
     [~] = vrep.simxSynchronousTrigger(clientID);
     [~] = vrep.simxStartSimulation(clientID, vrep.simx_opmode_oneshot);
+    [~] = vrep.simxSetJointPosition(clientID,J1_h,trj1(1,1),vrep.simx_opmode_blocking); %lag di 20ms circa costanti
+    [~] = vrep.simxSetJointPosition(clientID,J2_h,trj1(1,2)-pi/2,vrep.simx_opmode_blocking);
+    [~] = vrep.simxSetJointPosition(clientID,J3_h,trj1(1,3),vrep.simx_opmode_blocking);
+    [~] = vrep.simxSetJointPosition(clientID,J4_h,trj1(1,4),vrep.simx_opmode_blocking);
+    [~] = vrep.simxSetJointPosition(clientID,J5_h,trj1(1,5),vrep.simx_opmode_blocking);
+    [~] = vrep.simxSetJointPosition(clientID,J6_h,trj1(1,6),vrep.simx_opmode_blocking);
+    pause(2)
+    i = 2;
     tic
     while(i<length(set1))
         
         [~]=vrep.simxSynchronousTrigger(clientID);
         tic
         % Get Joint Position
-        [~,t1] = vrep.simxGetJointPosition(clientID,J1_h,vrep.simx_opmode_blocking);
-        [~,t2] = vrep.simxGetJointPosition(clientID,J2_h,vrep.simx_opmode_blocking);
-        [~,t3] = vrep.simxGetJointPosition(clientID,J3_h,vrep.simx_opmode_blocking);
-        [~,t4] = vrep.simxGetJointPosition(clientID,J4_h,vrep.simx_opmode_blocking);
-        [~,t5] = vrep.simxGetJointPosition(clientID,J5_h,vrep.simx_opmode_blocking);
-        [~,t6] = vrep.simxGetJointPosition(clientID,J6_h,vrep.simx_opmode_blocking);
+        [~,t1] = vrep.simxGetJointPosition(clientID,J1_h,vrep.simx_opmode_blocking)
+        [~,t2] = vrep.simxGetJointPosition(clientID,J2_h,vrep.simx_opmode_blocking)
+        [~,t3] = vrep.simxGetJointPosition(clientID,J3_h,vrep.simx_opmode_blocking)
+        [~,t4] = vrep.simxGetJointPosition(clientID,J4_h,vrep.simx_opmode_blocking)
+        [~,t5] = vrep.simxGetJointPosition(clientID,J5_h,vrep.simx_opmode_blocking)
+        [~,t6] = vrep.simxGetJointPosition(clientID,J6_h,vrep.simx_opmode_blocking)
+        
+        [~,posj6] = vrep.simxGetObjectPosition(clientID,J6_h,-1,vrep.simx_opmode_blocking);
         [~,endEffector] = vrep.simxGetObjectPosition(clientID,endEffector_h,-1,vrep.simx_opmode_blocking);
+        posJ6(:,i) = posj6;
         trj(:,i) = endEffector;
         joint(i,:) = [t1 t2 t3 t4 t5 t6];
 %         Set Joint Position
@@ -56,8 +67,8 @@ if(clientID > -1)
 
 %        Dynamics control 
         [~] = vrep.simxSetJointTargetPosition(clientID,J1_h,trj1(i,1),vrep.simx_opmode_oneshot);
-        [~] = vrep.simxSetJointTargetPosition(clientID,J2_h,trj1(i,2),vrep.simx_opmode_oneshot);
-        [~] = vrep.simxSetJointTargetPosition(clientID,J3_h,trj1(i,3)-pi,vrep.simx_opmode_oneshot);
+        [~] = vrep.simxSetJointTargetPosition(clientID,J2_h,trj1(i,2)+pi/2,vrep.simx_opmode_oneshot);
+        [~] = vrep.simxSetJointTargetPosition(clientID,J3_h,trj1(i,3),vrep.simx_opmode_oneshot);
         [~] = vrep.simxSetJointTargetPosition(clientID,J4_h,trj1(i,4),vrep.simx_opmode_oneshot);
         [~] = vrep.simxSetJointTargetPosition(clientID,J5_h,trj1(i,5),vrep.simx_opmode_oneshot);
         [~] = vrep.simxSetJointTargetPosition(clientID,J6_h,trj1(i,6),vrep.simx_opmode_oneshot);
@@ -80,7 +91,8 @@ hold on, grid on
 title('End Effector Trajectory')
 plot3(trj(1,:),trj(2,:),trj(3,:),'*--');
 plot3(x,y,z,'r');
-legend('CoppeliaSim','IK Matlab')
+plot3(posJ6(1,:),posJ6(2,:),posJ6(3,:),'--');
+legend('CoppeliaSim','IK Matlab','J6')
 xlabel('X [m]');ylabel('Y [m]');zlabel('Z [m]')
 xlim([-2 2]);ylim([-2 2]);zlim([0 2]);axis equal
 % Angoli tra -pi +pi
