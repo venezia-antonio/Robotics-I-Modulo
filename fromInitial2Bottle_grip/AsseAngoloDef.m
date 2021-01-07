@@ -1,14 +1,14 @@
 clear all
 run createRobot
 %% Generazione circonferenza e assi cono
-r = 0.05;                       % Raggio della circonferenza basculante
+r = 0.01;                       % Raggio della circonferenza basculante
 alpha = sym(5*pi/12);           % Angolo di basculazione
 h = double(tan(alpha)*r);       % Altezza del cono 
 gamma = linspace(0,2*pi,64);    % Angolo per spazzare la circonferenza
 z = h*ones(1,length(gamma));    % Coordinata lungo z 
-x = 0.4*ones(1,length(gamma));  % Coordinata lungo x
-y = 0.3*ones(1,length(gamma));  % Coordinata lungo y
-quota1 = 0.5;                   % Posizione della circonferenza lungo z
+x = -0.2954*ones(1,length(gamma));  % Coordinata lungo x
+y = -0.5*ones(1,length(gamma));  % Coordinata lungo y
+quota1 = 0.5506;                   % Posizione della circonferenza lungo z
 quota = quota1*ones(1,length(gamma));
 circonferenza = [x+r*cos(gamma);y+r*sin(gamma);quota];
 vertice = [x;y;quota+r];

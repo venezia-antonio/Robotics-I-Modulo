@@ -58,7 +58,7 @@ view(3)
 hold on, grid on
 title('End Effector Trajectory')
 plot3(endEffectorPosition(1,:),endEffectorPosition(2,:),endEffectorPosition(3,:),'b*');
-plot3(circonferenza(1,:),circonferenza(2,:),circonferenza(3,:),'ro');
+plot3(cfr(1,:),cfr(2,:),cfr(3,:),'ro');
 legend('CoppeliaSim','IK Matlab')
 xlabel('X [m]');ylabel('Y [m]');zlabel('Z [m]')
 xlim([-2 2]);ylim([-2 2]);zlim([0 2]);axis equal

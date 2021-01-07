@@ -19,23 +19,36 @@ tf1 = 1;
 
 [pos1,pos2,pos3,pos4,pos5,pos6] = trajPlan1(qi,qf,ti1,tf1,dqi,dqf,ddqi,ddqf);
 pos = [pos1', pos2', pos3', pos4', pos5', pos6'];
-%% Seconda traiettoria 
+%% Traiettoria 2 -- spazio operativo/lineare
 Pin = [-0.3454  -0.5003   0.5506]';
 Pf = [-0.3454  -0.5003   0.3306]';
 ti2 = tf1;
 tf2 = tf1 + 1;
 [p_s1,dp_s1,ddp_s1] = trajPlan2(Pin,Pf,ti2,tf2);
 
-%% Terza traiettoria
+%% Traiettoria 3 -- spazio operativo/lineare
 Pin = [-0.3454  -0.5003   0.3306]';
-Pf = [-0.3454  -0.5003   0.5506]';
+Pf =  [-0.3454  -0.5003   0.5506]';
 ti3 = tf2;
 tf3 = tf2 + 1;
 [p_s2,dp_s2,ddp_s2] = trajPlan2(Pin,Pf,ti3,tf3);
-%% Accorpo le 2 traiettorie lineari
-p_s(1,:) = [p_s1(1,:) p_s2(1,:)];
-p_s(2,:) = [p_s1(2,:) p_s2(2,:)];
-p_s(3,:) = [p_s1(3,:) p_s2(3,:)];
+%% Traiettoria 4 -- spazio operativo/circolare
+pt = p_s2(:,end);
+r = [0 0 1]';
+d = [pt(1)+0.05 pt(2) pt(3)+1]';
+delta = pt-d;
+c = d + (delta'*r)*r;
+ro = norm(pt-c);
+s = trajPlan2(0,2*pi*ro,0,2);
+cfr = trajCircle(r,d,pt,s);
+%% Accorpo traiettoria 2,3,4 (lineare + lineare + cfr)
+p_s(1,:) = [p_s1(1,:) p_s2(1,:) cfr(1,:)];
+p_s(2,:) = [p_s1(2,:) p_s2(2,:) cfr(2,:)];
+p_s(3,:) = [p_s1(3,:) p_s2(3,:) cfr(3,:)];
+% save checkpoint1
+%% Traiettoria 5 -- Bottle Shake
+
+
 
 %% Inverse Kinematics
 h = waitbar(0,'Please wait...');
@@ -68,7 +81,7 @@ close all
 figure(2)
 hold on,grid on
 view(3)
-plot3(p_s(1,:),p_s(2,:),p_s(3,:),'r*');
+plot3(p_s(1,:),p_s(2,:),p_s(3,:),'r');
 xlim([-1 1]);ylim([-1 1]);zlim([0 1.5]);
 for i = 1:10:length(result)
 IRB140.plot(result(i,:));
