@@ -3,8 +3,8 @@
 % close all
 % load Traiettoria
 %% Esempio legge orario joint1
-robot = res;%[res1;res2;res3;res4;res5;res6;res7;res8];
-plate = res_p;%[res3_p;res4_p;res5_p;res6_p;res7_p;res8_p];
+robot = res;
+plate = res_p;
 %% Connection to CoppeliaSim
 vrep = remApi('remoteApi');
 vrep.simxFinish(-1); %Pulisce connessioni aperte
@@ -34,8 +34,7 @@ if(clientID > -1)
     [~]=vrep.simxSynchronousTrigger(clientID);
 %     pause(4)
     
-    for i = 1:length(robot)  
-        disp(i)
+    for i = 1:length(robot)      
         [~]=vrep.simxSynchronousTrigger(clientID);
         tic
         % Get Joint angle
@@ -54,13 +53,12 @@ if(clientID > -1)
         end
         if(abs(endEffectorPosition(:,i) - dummyPos) <= 1e-03)
            closeGrip(vrep,clientID,dummy_h,glass_h);
-           %disp('grip chiuso')
+           disp('grip chiuso')
         end
         
 %         [~]=vrep.simxSynchronousTrigger(clientID);
     end
 openGrip(vrep,clientID,bottle_h)
-pause(3)
 [~] = vrep.simxStopSimulation(clientID, vrep.simx_opmode_oneshot); 
 else
     disp("Fail");
