@@ -1,5 +1,5 @@
-function T = shakeBeer(cfr,c,ro)
-alpha = sym(5*pi/12);           % Angolo di basculazione
+function T = shakeBeer(cfr,c,ro,alpha,R)
+% alpha = sym(5*pi/12);           % Angolo di basculazione
 h = double(tan(alpha)*ro);       % Altezza del cono 
 vertice = [c(1);c(2);c(3)+h];        % Vertice del cono
 
@@ -34,7 +34,7 @@ axis_z = zeros(3,length(cfr));
 
 
 for i = 1:length(cfr)
-u = cos_dir(:,i);
+u = cos_dir(:,i); % =assi
 v = [-cos_dir(3,i),0,cos_dir(1,i)]';
 w = cross(v,u);
 
@@ -51,7 +51,7 @@ end
 T = struct([]);
 
 for i = 1:length(axis_x)
-    T(i).R = [axis_x(:,i) axis_y(:,i) axis_z(:,i)]*roty(pi);
+    T(i).R = [axis_x(:,i) axis_y(:,i) axis_z(:,i)]*R;
 end 
 
 end
